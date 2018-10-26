@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}post_detail.html{% endblock %}
+{% block content %}
+<div id="content">
+
+
+<h2>{{object.title}}</h2>		<!-- object객체는 PostDV클래스형 뷰에서 컨텍스트 변수로 넘겨주는 Post 의 특정 객체 -->
+
+<p class="other_posts">
+	{% if object.get_previous_by_modify_date %} <!-- modify_date컬럼 기준으로 이전 객체 반환 함수 -->
+	<a href="{{object.get_previous_post.get_absolute_url}}"title="View previous post"> &laquo;--{{object.get_previous_post}}</a>
+	{% endif %} <!-- 이전 객체의 URL패턴 반환, 이를 이전 객체의 문자열 텍스트에 링크 /blog/post/slug단어형식임. &laquo는 <<를 의미-->
+
+	{%if object.get_next_by_modify_date %}
+	| <a href="{{object.get_next_post.get_absolute_url}}" title="View next post"> {{object.get_next_post}} --&raquo;</a>
+	{% endif %} <!-- 다음 객체의 URL패턴 반환, 이를 다음 객체의 문자열 텍스트에 링크 /blog/post/slug단어형식임. &raquo는 >>를 의미-->
+</p>
+
+<p class="date">{{object.modify_date|date:"j F Y"}}</p>	<!-- modify_date를 j F Y형식으로 출력 ex)12 July 2015 -->
+<br/>
+
+<div class="body">
+	{{object.content|linebreaks}}   <!-- Post객체의 content속성값 출력. linebreaks 템플릿필터는 \n을 인식 -->
+</div>
+
+<div>
+	<b>TAGS: </b>	<!-- 태그를 표시하기 위해 볼드로 -->
+	{% load tagging_tags %} <!-- tagging 패키지에 정의된 커스텀 태그를 사용하기 위해 tagging_tags 모듈을 로딩함-->
+	{% tags_for_object object as tag %} <!-- 커스텀 태그를 사용해 object 객체에 달려 있는 태그들의 리스트를 추출 함. object객체는 PostDV클래스형 뷰에서 넘겨주는 컨텍스트 변수로서, 특정 Post 객체가 담겨 있음. 추출한 태그 리스트는 tags 템플릿 변수에 할당함. -->
+	{% for tag in tags %} <!-- 추출한 태그 리스트의 각 태그를 순회하면서 tag.name을 출력 -->
+	<a href="{% url 'blog:tagged_object_list' tag.name %}">{{tag.name}}</a>		<!-- tag.name에 연결된 링크는 'blog:tagged_object_list' URL패턴에 tag.name인자를 넘겨주어 지정함. -->
+	{% endfor %}
+	<a href="{% url 'blog:tag_cloud' %}"><i>[ TagCloud ]</i></a> <!-- for 루프 이후에, 동일한 줄에 [TagCloud] 텍스트를 출력하고 'blog:tag_cloud' URL 패턴을 <a href> 링크로 연결 -->
+</div>
+
+
+</div>
+{% endblock %}

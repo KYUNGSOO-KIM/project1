@@ -1,0 +1,15 @@
+
+<!--<!DOCTYPE html>
+<html>
+<head> -->
+{% extends "base.html" %} 	<!-- 반드시 첫줄에 -->
+{% block title %} Django Bookmark Detail {% endblock %}
+	<title>Django Bookmark Detail</title>
+{% block content %}
+	<div id="content">
+		<h1>{{object.title}}</h1>
+		<ul>
+			<li>URL: <a href="{{object.url}}">{{object.url}}</a></li>
+		</ul>
+	</div>
+{% endblock %}

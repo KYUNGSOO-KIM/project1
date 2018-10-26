@@ -1,0 +1,20 @@
+
+<!--<!DOCTYPE html>
+<html>
+<head> -->
+
+{% extends "base.html" %} 	<!-- 반드시 첫줄에 -->
+{% block title %} Django Bookmark List {% endblock %}
+
+{% block content %}
+
+	<div id="content">	<!-- base.css 의 스타일 적용 -->
+		<h1>Bookmark List</h1>
+		<ul>
+			{% for bookmark in object_list %}
+				<li><a href="{% url 'bookmark:detail' bookmark.id %}">{{bookmark}}</a></li>		<!--- detail만 쓰면 에러남 reverse로 못찾음 --->
+			{% endfor %}
+		</ul>
+	</div>
+
+{% endblock %}

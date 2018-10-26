@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}post_archive_year.html{% endblock %}
+{% block content %}
+<div id="content">
+
+<h1> Post Archives for {{year|date:"Y"}}</h1> <!-- year컨텍스트 변수는 해당 연도에 대한 datetime.date타입의 객체-->
+
+<ul>
+	{% for date in date_list %} <!--date_list 컨텍스트 변수는 DateQuerySet 객체 리스트를 담고 있음. DateQuerySet객체 리스트는 QuerySet객체 리스트에서 날짜 정보만을 추출해 담고 있는 객체 리스트임. DateQuerySet에 들어 있는 객체는 datetime.date타입의 객체임-->
+		<li style="display:inline;">
+			<a href="{url 'blog:post_month_archive' year|date:'Y' date|date:'F' %}">{{date|date:"F"}}</a></li>
+		{% endfor %} <!-- 해당 연월에 생성/수정된 포스트를 보여주는 url 링크 -->
+</ul>
+<br/>
+
+<div>
+	<ul>
+		{% for post in object_list %} <!-- object_list는 디폴트 컨텍스트 변수. latest도 가능. 뷰에서 넘겨준 객체가 있음-->
+		<li>{{post.modify_date|date:"Y-m-d"}}&nbsp;&nbsp;&nbsp; <!--- modify_date를 "Y-m=d"형식으로 보여줌, 3개의빈칸-->
+			<a href="{{post.get_absolute_url}}"><strong>{{post.title}}</strong></a></li>
+		{% endfor %}
+	</ul>
+</div>
+
+</div>
+{% endblock %}

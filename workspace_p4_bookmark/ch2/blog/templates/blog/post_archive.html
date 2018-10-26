@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}post_archive.html{% endblock %}
+{% block content %}
+<div id="content">
+
+
+<h1>Post Archives until {% now "N d, Y" %}</h1> <!-- 현재 날짜 출력 ex)July 18, 2015-->
+<ul>
+	{% for date in date_list %} <!--- date_list컨텍스트 변수는 DateQuerySet 객체 리스트를 담고 있음. 날짜 정보만을 추출한 거임. -->
+	<li style="display: inline;"> <!--  연도 메뉴를 한줄에 -->
+		<a href="{% url 'blog:post_year_archive' date|date:'Y' %}">Year-{{date|date:"Y"}}</a>
+	</li> <!-- date|date:'Y'는 YYYY형식을 의미. -->
+	{% endfor %}
+</ul>
+<br/>
+
+<div>
+	<ul>
+		{% for post in object_list %} <!-- object_list는 디폴트 컨텍스트 변수. latest도 가능. 뷰에서 넘겨준 객체가 있음-->
+		<li> {{post.modify_date|date:"Y-m-d"}}&nbsp;&nbsp;&nbsp; <!--- modify_date를 "Y-m=d"형식으로 보여줌, 3개의빈칸-->
+			<a href="{{post.get_absolute_url}}"><strong>{{post.title}}</strong></a></li>  
+		{% endfor %}
+	</ul>
+</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}"tagging_cloud.html"{% endblock %}
+
+{% load staticfiles %}
+{% block extrastyle %}{% static "tagging/tag.css" %}{% endblock %}
+
+{% block content %}
+<div id="content">
+
+	<h1>Blog Tag Cloud</h1>
+
+	<div class="tag-cloud">
+		{% load tagging_tags %}	<!-- tagging 패키지에 정의된 커스텀 태그를 사용하기 위해 tagging_tags 모듈을 로딩 -->
+		{% tag_cloud_for_model blog.Post as tags with steps=6 min_count=1 distribution=log %}
+<!--- 커스텀 태그를 사용해 tag-cloud 표현 방식을 정의. blog.Post모델에서 tags라는 템플릿변수에 담아, 폰트크기범위를 1~6, 최소
+	사용 횟수를 1로 정함.  폰트 크기 할당 시 Logarithmic 알고리즘 사용 -->
+		{% for tag in tags %}	
+		<span class="tag-{{tag.font_size}}"> <!-- 각 태그별로 디자인 적용위해 -->
+			<a href="{% url 'blog:tagged_object_list' tag.name %}">{{tag.name}} ({{tag.font_size}})</a>
+		</span>		<!-- 태그를 Django(6)형식으로 출력하고 링크는 tagged_object_list URL패턴에 tag.name인자를 넘겨주어 지정.-->
+
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
